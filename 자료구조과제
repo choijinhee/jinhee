@@ -1,0 +1,115 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct _node{
+	int value;
+	struct _node* next;
+}node;
+
+typedef node* nptr;
+
+typedef struct _list{
+	int count;
+	nptr head;
+}list;
+
+void init(list* lptr);
+void insert(list* lptr,int value,int position);
+void delete_list(list* lptr,int position);
+void print_list(list* lptr);
+
+
+void init(list* lptr){
+	//initialize the list
+	lptr->count=0;
+	lptr->head=NULL;
+}
+
+void insert(list* lptr,int value,int position){
+	//insert value to proper position
+	if(position<1 || position>(lptr->count)+1){
+		printf("Position Out of Bound\n");
+		return;
+	}
+	nptr new_nptr=(node*)malloc(sizeof(node));
+	new_nptr->value=value;
+
+	if(position==1){
+		new_nptr->next=lptr->head;
+		lptr->head=new_nptr;
+	}
+	else{
+		nptr tmp=lptr->head;
+		int i;
+		for(i=1;i<position-1;i++){
+			tmp=tmp->next;
+		}
+		new_nptr->next=tmp->next;
+		tmp->next=new_nptr;
+	}
+	lptr->count++;
+}
+
+void delete_list(list* lptr,int position){
+	//delete an item on the position
+	if(position<1 || position>(lptr->count)){
+		printf("Position Out of Bound\n");
+		return;
+	}
+	nptr tmp=lptr->head;
+
+	if(position==1){
+		lptr->head=tmp->next;
+		free(tmp);
+	}
+	else{
+		int i;
+		for(i=1;i<position-1;i++){
+			tmp=tmp->next;
+		}
+		nptr tmp2=tmp->next;
+		tmp->next=tmp2->next;
+		free(tmp2);
+	}
+	lptr->count--;
+}
+
+void print_list(list* lptr){
+	nptr tmp=lptr->head;
+	printf("현재 List: ");
+	while(tmp!=NULL){
+		printf("%d ",tmp->value);
+		tmp=tmp->next;
+	}
+	printf("\n");
+	printf("현재 데이터의 수: %d(개)\n",lptr->count);
+}
+
+int main(){
+	list* mylist=(list*)malloc(sizeof(list));
+	init(mylist);
+
+	insert(mylist,3,1);
+	insert(mylist,4,2);
+	insert(mylist,5,3);
+	insert(mylist,6,4);
+	insert(mylist,7,5);
+	insert(mylist,8,6);
+	insert(mylist,9,7);
+	
+
+	print_list(mylist);
+
+	delete_list(mylist,7);
+	//delete(mylist,);
+
+	print_list(mylist);
+
+	insert(mylist,1,7);
+	insert(mylist,2,8);
+
+
+	print_list(mylist);
+
+	return 0;
+}

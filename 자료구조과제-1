@@ -1,0 +1,146 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+typedef struct node {
+	int key;
+	struct node *prev;
+	struct node *next;
+}NODE;
+
+void insert_node(NODE **, int);
+int delete_node(NODE **, int);
+void display_node(NODE *);
+
+int main(void)
+{
+	NODE *H = (NODE *)malloc(sizeof(NODE));
+
+	// initialize the starting node.
+	H->key = NULL;
+	H->next = H;
+	H->prev = H;
+
+	insert_node(&H, 1);
+	insert_node(&H, 2);
+	insert_node(&H, 3);
+	insert_node(&H, 4);
+	insert_node(&H, 5);
+	insert_node(&H, 6);
+	insert_node(&H, 7);
+	insert_node(&H, 8);
+	insert_node(&H, 9);
+	insert_node(&H, 10);
+	insert_node(&H, 11);
+	insert_node(&H, 12);	
+	insert_node(&H, 13);
+	insert_node(&H, 14);
+	insert_node(&H, 15);
+	insert_node(&H, 16);
+	insert_node(&H, 17);
+	insert_node(&H, 18);
+	insert_node(&H, 19);
+	insert_node(&H, 20);
+
+	display_node(H);
+
+	delete_node(&H, 20);
+
+
+
+	display_node(H);
+
+	return 0;
+}
+
+/*
+insert_node( NODE **, int)
+돌아감*/
+void insert_node(NODE **n, int key)
+{
+	NODE *new_node = (NODE *)malloc(sizeof(NODE));
+	NODE *temp = *n;
+
+	printf("NODE [%d]\n", key);
+
+	new_node->next = temp;
+	new_node->key = key;
+	temp->prev = new_node;
+
+	// find the last node.
+	while (temp->next != *n)
+	{
+		temp = temp->next;
+	}
+
+	new_node->prev = temp;
+	temp->next = new_node;
+}
+
+/*
+delete_node( NODE **, int)
+링크드리스트를 지운다.
+지워지면 0으로 가고 
+그렇지 않으면 -1이된다.
+*/
+int delete_node(NODE **n, int key)
+{
+	NODE *h = (*n)->next;   // head
+	NODE *t = *n;           // tail
+
+	printf("DELETE [%d]\n", key);
+
+	// if variable 'h' is not starting node.
+	while (h != *n)
+	{
+		if (h->key == key)
+		{
+			t->next = h->next;
+			h->next->prev = t;
+
+			free(h);
+
+			return 0;
+		}
+
+		h = h->next;
+		t = t->next;
+	}
+
+	printf("Can't find the key!\n");
+
+	return -1;
+}
+
+/*
+display_node( NODE *)
+노드 출력*/
+void display_node(NODE *n)
+{
+	NODE *temp = n->next;
+
+	printf("H > ");
+
+	// 다음값출력
+	while (temp != n)
+	{
+		printf("%3d", temp->key);
+
+		temp = temp->next;
+	}
+	
+
+	printf(" > < ");
+	temp = temp->prev;
+
+	// 전 값출력
+	while (temp != n)
+	{
+		printf("%3d", temp->key);
+
+		temp = temp->prev;
+	}
+
+	printf(" < T.\n");
+}
+

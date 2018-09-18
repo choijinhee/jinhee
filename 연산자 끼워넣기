@@ -1,0 +1,92 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+int n;
+int arr[11];
+int minv = 1000000000;
+int maxv = -1000000000;
+int ca[4];
+int cmp = 0;
+struct ps{
+    int v;
+    int idx;
+    int cal[4];
+};
+
+queue <ps> que;
+
+int main(){
+    cin >> n;
+    ps p1;
+    for(int i=0; i<4; i++)
+        p1.cal[i] = 0;
+    cmp = 0;
+    for(int i=0; i<n; i++)
+        cin >> arr[i];
+    
+    for(int i=0; i<4; i++){
+        cin >> ca[i];
+        p1.cal[i] = ca[i];
+        cmp += p1.cal[i];
+    }
+    p1.v = arr[0];
+    p1.idx = 1;
+    que.push(p1);
+    
+    while(!que.empty()){
+        ps now = que.front();
+        que.pop();
+        
+        int cnt = 0;
+        for(int i=0; i<4; i++){
+            if(now.cal[i] == 0){
+                cnt++;
+            }
+        }
+        
+        if(cnt == 4){
+            if(minv > now.v) minv = now.v;
+            if(maxv < now.v) maxv = now.v;
+            continue;
+        }
+        
+        for(int i=0; i<4; i++){
+            ps tmp = now;
+            if(i==0){
+                if(tmp.cal[i] != 0){
+                    tmp.v += arr[tmp.idx++];
+                    tmp.cal[i]--;
+                    que.push(tmp);
+                }
+            }
+            if(i==1){
+                if(tmp.cal[i] != 0){
+                    tmp.v -= arr[tmp.idx++];
+                    tmp.cal[i]--;
+                    que.push(tmp);
+                }
+            }
+            if(i==2){
+                if(tmp.cal[i] != 0){
+                    tmp.v *= arr[tmp.idx++];
+                    tmp.cal[i]--;
+                    que.push(tmp);
+                }
+            }
+            if(i==3){
+                if(tmp.cal[i] != 0){
+                    tmp.v /= arr[tmp.idx++];
+                    tmp.cal[i]--;
+                    que.push(tmp);
+                }
+            }
+        }
+    }
+    
+    cout << maxv << endl;
+    cout << minv << endl;
+    
+    
+    return 0;
+}
